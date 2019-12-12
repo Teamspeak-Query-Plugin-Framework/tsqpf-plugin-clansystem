@@ -1,10 +1,8 @@
-# Teamspeak Query Plugin Framework | Plugin Template
+# ClanSystem
 A small template for any TSQPF plugins.
 
 ## 🏷️ Features
-✅ Implements newest compiled API version by default<br/>
-✅ Template code<br/>
-✅ Template plugin.yml configuration<br/>
+✅ Let your users create their own group<br/>
 
 ## 🚀 Getting Started
 
