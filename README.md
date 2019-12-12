@@ -3,6 +3,10 @@ A small template for any TSQPF plugins.
 
 ## 🏷️ Features
 ✅ Let your users create their own group<br/>
+✅ Clan list<br/>
+✅ Clan channels<br/>
+✅ Custom clan groups<br/>
+✅ Clan ranks<br/>
 
 ## 🚀 Getting Started
 
