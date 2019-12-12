@@ -1,0 +1,3 @@
+main: net.vortexdata.tsqpf_plugin_template.Main
+name: TemplatePlugin
+version: 1.0.0-SNAPSHOT
