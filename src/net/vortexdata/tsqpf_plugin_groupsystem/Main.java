@@ -1,8 +1,7 @@
-package net.vortexdata.tsqpf_plugin_template;
+package net.vortexdata.tsqpf_plugin_groupsystem;
 
-import com.github.theholywaffle.teamspeak3.api.event.ClientJoinEvent;
+import com.github.theholywaffle.teamspeak3.api.event.*;
 import net.vortexdata.tsqpf.plugins.TeamspeakPlugin;
-import net.vortexdata.tsqpf_plugin_template.commands.chat.CTest;
 
 public class Main extends TeamspeakPlugin {
 
@@ -79,4 +78,8 @@ public class Main extends TeamspeakPlugin {
 
     }
 
+    @Override
+    public void onClientJoin(ClientJoinEvent clientJoinEvent) {
+        super.onClientJoin(clientJoinEvent);
+    }
 }

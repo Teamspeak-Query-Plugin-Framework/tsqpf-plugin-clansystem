@@ -1,4 +1,4 @@
-package net.vortexdata.tsqpf_plugin_template.commands.chat;
+package net.vortexdata.tsqpf_plugin_groupsystem.commands.chat;
 
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
