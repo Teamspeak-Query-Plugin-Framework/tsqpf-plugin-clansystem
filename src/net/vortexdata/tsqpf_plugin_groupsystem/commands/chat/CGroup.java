@@ -112,7 +112,7 @@ public class CGroup implements ChatCommandInterface {
 
                     try {
                         requestManager.getGroupRequestByName(command[2]);
-                        requestManager.
+                        requestManager.validateRequest(command[2]);
                     } catch (PendingGroupNotFoundException e) {
                         api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestNotFound"));
                         return;
