@@ -9,6 +9,7 @@ public class Main extends TeamspeakPlugin {
     public void onEnable() {
 
         getConfig().setDefault("adminGroupIds", "1");
+        getConfig().setDefault("whitelistGroupIds", "1");
         // Message Group Request
         getConfig().setDefault("messageGroupRequestSyntax", "Create your own group by using '!group request <GROUPNAME>'.");
         getConfig().setDefault("messageGroupRequestSuccess", "Your group has been registered and will be reviewed by an administrator as soon as possible.");
@@ -68,6 +69,7 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageAdminGroupDeleteValidate", "Are you sure you want to delete this group? Use '!group delete <GROUPNAME> IAMSURE' to confirm.");
         getConfig().setDefault("messageAdminGroupDeleteSuccess", "Group has been deleted.");
         getConfig().setDefault("messageAdminGroupDeleteFailedBlacklist", "This group can not be deleted.");
+
 
 
         getConfig().saveAll();

@@ -24,40 +24,33 @@ public class RequestManager {
         this.config = config;
     }
 
-    public boolean createRequest(String name, String uuid) throws GroupNameAlreadyTakenException, UserGroupAlreadyPendingException, UserAlreadyMemberOfGroupException {
-
-
-        // TODO: Implement backcheck
+    public boolean createRequest(String name, String uuid) {
 
         try {
-            getGroupRequestByName(name);
-            throw new GroupNameAlreadyTakenException();
-        } catch (PendingGroupNotFoundException e) {
-
+            getGroupRequestByUUID(uuid);
+        } catch (PendingGroupNotFoundException e1) {
             try {
-                getGroupRequestByUUID(uuid);
-            } catch (PendingGroupNotFoundException e1) {
-                try {
-                    ArrayList<String> lines = new ArrayList<>(Files.lines(Paths.get(pathRequestsFile)).collect(Collectors.toList()));
-                    lines.add(new GroupRequest(name, uuid).toString());
+                ArrayList<String> lines = new ArrayList<>(Files.lines(Paths.get(pathRequestsFile)).collect(Collectors.toList()));
+                lines.add(new GroupRequest(name, uuid).toString());
 
-                    BufferedWriter bw = new BufferedWriter(new FileWriter(pathRequestsFile, false));
-                    lines.forEach(x -> {
-                        try {
-                            bw.write(x);
-                        } catch (IOException e) {
-                            logger.printError("Failed to save line in group requests.");
-                        }
-                    });
+                BufferedWriter bw = new BufferedWriter(new FileWriter(pathRequestsFile, false));
+                lines.forEach(x -> {
+                    try {
+                        bw.write(x);
+                    } catch (IOException e) {
+                        logger.printError("Failed to save line in group requests.");
+                    }
+                });
 
-                    bw.close();
-
-                    return true;
-                } catch (IOException e) {
-                    return false;
-                }
+                bw.close();
+            } catch (IOException e) {
+                return false;
             }
         }
+
+        loadRequests();
+
+        return true;
 
     }
 
