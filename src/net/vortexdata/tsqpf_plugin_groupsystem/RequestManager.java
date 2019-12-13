@@ -1,5 +1,6 @@
 package net.vortexdata.tsqpf_plugin_groupsystem;
 
+import com.github.theholywaffle.teamspeak3.*;
 import com.github.theholywaffle.teamspeak3.api.reconnect.*;
 import net.vortexdata.tsqpf.plugins.*;
 
@@ -14,10 +15,36 @@ public class RequestManager {
 
     private ArrayList<GroupRequest> pendingRequests;
     private PluginLogger logger;
+    private PluginConfig config;
+    private TS3Api api;
 
-
-    public RequestManager(PluginLogger logger) {
+    public RequestManager(PluginLogger logger, TS3Api api, PluginConfig config) {
         this.logger = logger;
+        this.api = api;
+        this.config = config;
+    }
+
+    public boolean createRequest(String name, String uuid) {
+
+        try {
+            ArrayList<String> lines = new ArrayList<>(Files.lines(Paths.get(pathRequestsFile)).collect(Collectors.toList()));
+            lines.add(new GroupRequest(name, uuid).toString());
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(pathRequestsFile, false));
+            lines.forEach(x -> {
+                try {
+                    bw.write(x);
+                } catch (IOException e) {
+                    logger.printError("Failed to save line in group requests.");
+                }
+            });
+
+            bw.close();
+
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public boolean declineRequest(String groupname) {
@@ -53,6 +80,8 @@ public class RequestManager {
                         logger.printError("Failed to save line in group requests.");
                     }
                 });
+
+                bw.close();
 
                 loadRequests();
                 return true;

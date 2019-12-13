@@ -10,11 +10,12 @@ public class Main extends TeamspeakPlugin {
 
         getConfig().setDefault("adminGroupIds", "1");
         // Message Group Request
+        getConfig().setDefault("messageGroupRequestSyntax", "Create your own group by using '!group request <GROUPNAME>'.");
         getConfig().setDefault("messageGroupRequestSuccess", "Your group has been registered and will be reviewed by an administrator as soon as possible.");
         getConfig().setDefault("messageGroupRequestFailedAlreadyMemberOfGroup", "You can not request a group if you are already member of one.");
         getConfig().setDefault("messageGroupRequestFailedAlreadyPending", "You have already requested a group. Please wait till its verified or rejected. If you want to cancel your group request, you can do that by using the command '!group cancel request'.");
         getConfig().setDefault("messageGroupRequestFailedNameTaken", "Sorry, but this group name is already taken.");
-        getConfig().setDefault("messageGroupRequestFailedNameInvalid", "Sorry, but this group name is not valid. Make sure it only contains alpha-numeric characters and is between 4 - 12 characters in length.");
+        getConfig().setDefault("messageGroupRequestFailedNameInvalid", "Sorry, but this group name is not valid. Make sure it only contains alpha-numeric characters and is between 4 - 20 characters in length.");
         getConfig().setDefault("messageGroupRequestCancelSuccess", "All of your pending group requests have been cancelled.");
         getConfig().setDefault("messageGroupRequestCancelFailed", "You don't have any pending group requests.");
         getConfig().setDefault("messageGroupRequestFailedNoPermissions", "Sorry, but you don't have the required permissions to perform this action.");
@@ -56,6 +57,7 @@ public class Main extends TeamspeakPlugin {
 
         getConfig().setDefault("messageErrorUnknown", "Sorry, but an unknown error occurred.");
         getConfig().setDefault("messageErrorNoPermission", "Sorry, but you don't have permission for this action.");
+        getConfig().setDefault("messageSyntax", "Syntax: !group <join | request | delete>");
 
         // Message Admin
         getConfig().setDefault("messageAdminGroupRequestPending", "There are new group requests awaiting validation. Use '!group list requests' to list all requests. Use '!group validate <GROUP>' to validate it.");
