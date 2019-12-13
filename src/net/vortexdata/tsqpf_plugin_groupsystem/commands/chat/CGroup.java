@@ -107,12 +107,56 @@ public class CGroup implements ChatCommandInterface {
                 } else {
                     api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestSyntax"));
                 }
+            } else if (command[1].equalsIgnoreCase("validate") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
+                if (command.length > 2) {
+
+                    try {
+                        requestManager.getGroupRequestByName(command[2]);
+                        requestManager.
+                    } catch (PendingGroupNotFoundException e) {
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestNotFound"));
+                        return;
+                    }
+
+                } else {
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestSyntax"));
+                }
             }
 
         } else {
             api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageSyntax"));
         }
 
+    }
+
+    public boolean isInvokerAdmin(String uid) {
+        ArrayList<ServerGroup> invokerGroups = new ArrayList<>(api.getServerGroupsByClient(api.getClientByUId(uid)));
+        ArrayList<Integer> adminGroups = new ArrayList<>();
+
+        String[] adminGroupsRaw = config.readValue("adminGroupIds").split(",");
+
+        for (String s : adminGroupsRaw) {
+            adminGroups.add(Integer.parseInt(s));
+        }
+
+        boolean isAdmin = false;
+        for (int i = 0; i < invokerGroups.size(); i++) {
+
+            if (isAdmin)
+                break;
+
+            for (int j = 0; j < adminGroups.size(); j++) {
+
+                if (invokerGroups.get(i).getId() == adminGroups.get(j)) {
+                    isAdmin = true;
+                    break;
+                }
+
+            }
+
+        }
+
+        return isAdmin;
     }
 
 }

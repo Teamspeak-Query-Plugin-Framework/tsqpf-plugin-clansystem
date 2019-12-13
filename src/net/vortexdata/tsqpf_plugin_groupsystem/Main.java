@@ -2,6 +2,7 @@ package net.vortexdata.tsqpf_plugin_groupsystem;
 
 import com.github.theholywaffle.teamspeak3.api.event.*;
 import net.vortexdata.tsqpf.plugins.TeamspeakPlugin;
+import net.vortexdata.tsqpf_plugin_groupsystem.commands.chat.*;
 
 public class Main extends TeamspeakPlugin {
 
@@ -65,12 +66,15 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageAdminGroupRequestDeclined", "Group request has been declined due to following reason: ");
         getConfig().setDefault("messageAdminGroupRequestDeclinedMissingReason", "Please specify a reason.");
         getConfig().setDefault("messageAdminGroupRequestAccepted", "Group request has been accepted.");
+        getConfig().setDefault("messageAdminGroupRequestNotFound", "Group request could not be found.");
+        getConfig().setDefault("messageAdminGroupRequestSyntax", "Syntax: !group validate <GROUPNAME>");
 
         getConfig().setDefault("messageAdminGroupDeleteValidate", "Are you sure you want to delete this group? Use '!group delete <GROUPNAME> IAMSURE' to confirm.");
         getConfig().setDefault("messageAdminGroupDeleteSuccess", "Group has been deleted.");
         getConfig().setDefault("messageAdminGroupDeleteFailedBlacklist", "This group can not be deleted.");
 
-
+        RequestManager rm = new RequestManager(getLogger(), getAPI(), getConfig());
+        registerChatCommand(new CGroup(getAPI(), getConfig(), rm, getLogger()), "!group");
 
         getConfig().saveAll();
 

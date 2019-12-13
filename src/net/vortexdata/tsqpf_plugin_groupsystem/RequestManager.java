@@ -123,6 +123,25 @@ public class RequestManager {
 
     }
 
+    public boolean validateRequest(String name) {
+        try {
+            GroupRequest gr = getGroupRequestByName(name);
+            deleteRequest(gr);
+            loadRequests();
+
+            try {
+                api.addClientToServerGroup(api.addServerGroup(name), api.getClientByUId(gr.getInvokerUUID()).getId());
+            } catch (Exception e) {
+                // TODO: Store temp link
+            }
+
+            return true;
+        } catch (PendingGroupNotFoundException e) {
+            logger.printDebug("Could not validate group.");
+            return false;
+        }
+    }
+
     public boolean loadRequests() {
         ArrayList<GroupRequest> newGroupRequests = new ArrayList<>();
         try {
