@@ -1,8 +1,8 @@
 package net.vortexdata.tsqpf_plugin_groupsystem;
 
 import com.github.theholywaffle.teamspeak3.*;
-import com.github.theholywaffle.teamspeak3.api.reconnect.*;
 import net.vortexdata.tsqpf.plugins.*;
+import net.vortexdata.tsqpf_plugin_groupsystem.exceptions.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -24,27 +24,59 @@ public class RequestManager {
         this.config = config;
     }
 
-    public boolean createRequest(String name, String uuid) {
+    public boolean createRequest(String name, String uuid) throws GroupNameAlreadyTakenException, UserGroupAlreadyPendingException, UserAlreadyMemberOfGroupException {
+
+
+        // TODO: Implement backcheck
 
         try {
-            ArrayList<String> lines = new ArrayList<>(Files.lines(Paths.get(pathRequestsFile)).collect(Collectors.toList()));
-            lines.add(new GroupRequest(name, uuid).toString());
+            getGroupRequestByName(name);
+            throw new GroupNameAlreadyTakenException();
+        } catch (PendingGroupNotFoundException e) {
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(pathRequestsFile, false));
-            lines.forEach(x -> {
+            try {
+                getGroupRequestByUUID(uuid);
+            } catch (PendingGroupNotFoundException e1) {
                 try {
-                    bw.write(x);
+                    ArrayList<String> lines = new ArrayList<>(Files.lines(Paths.get(pathRequestsFile)).collect(Collectors.toList()));
+                    lines.add(new GroupRequest(name, uuid).toString());
+
+                    BufferedWriter bw = new BufferedWriter(new FileWriter(pathRequestsFile, false));
+                    lines.forEach(x -> {
+                        try {
+                            bw.write(x);
+                        } catch (IOException e) {
+                            logger.printError("Failed to save line in group requests.");
+                        }
+                    });
+
+                    bw.close();
+
+                    return true;
                 } catch (IOException e) {
-                    logger.printError("Failed to save line in group requests.");
+                    return false;
                 }
-            });
-
-            bw.close();
-
-            return true;
-        } catch (IOException e) {
-            return false;
+            }
         }
+
+    }
+
+    public GroupRequest getGroupRequestByName(String name) throws PendingGroupNotFoundException {
+
+        for (GroupRequest gr : pendingRequests)
+            if (gr.getGroupname().equalsIgnoreCase(name))
+                return gr;
+
+        throw new PendingGroupNotFoundException();
+
+    }
+
+    public GroupRequest getGroupRequestByUUID(String uuid) throws PendingGroupNotFoundException {
+        for (GroupRequest gr : pendingRequests)
+            if (gr.getInvokerUUID().equalsIgnoreCase(uuid))
+                return gr;
+
+        throw new PendingGroupNotFoundException();
     }
 
     public boolean declineRequest(String groupname) {

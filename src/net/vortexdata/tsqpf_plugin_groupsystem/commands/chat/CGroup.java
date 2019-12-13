@@ -30,7 +30,11 @@ public class CGroup implements ChatCommandInterface {
 
                     if (GroupNameChecker.checkName(command[2])) {
 
-                        requestManager.
+                        if (requestManager.createRequest(command[2], textMessageEvent.getInvokerUniqueId()))
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestSuccess"));
+                        else
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestSuccess"));
+
 
                     } else {
                         api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestFailedNameInvalid"));
