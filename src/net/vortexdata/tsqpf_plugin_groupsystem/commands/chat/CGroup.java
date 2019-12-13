@@ -46,11 +46,17 @@ public class CGroup implements ChatCommandInterface {
                         }
 
                         for (int i = 0; i < groups.length; i++) {
+                            boolean isOneWhitelisted = false;
                             for (int j = 0; j < whitelistedGroups.size(); j++) {
-                                if (groups[i] != whitelistedGroups.get(j)) {
-                                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestFailedAlreadyMemberOfGroup"));
-                                    return;
+                                if (groups[i] == whitelistedGroups.get(j)) {
+                                    isOneWhitelisted = true;
                                 }
+                            }
+
+                            if (!isOneWhitelisted) {
+                                logger.printDebug("" + groups[i]);
+                                api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestFailedAlreadyMemberOfGroup"));
+                                return;
                             }
                         }
 
@@ -119,7 +125,7 @@ public class CGroup implements ChatCommandInterface {
                     }
 
                 } else {
-                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestSyntax"));
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestSyntax"));
                 }
             }
 

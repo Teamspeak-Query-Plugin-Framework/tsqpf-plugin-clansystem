@@ -22,6 +22,8 @@ public class RequestManager {
         this.logger = logger;
         this.api = api;
         this.config = config;
+        pendingRequests = new ArrayList<>();
+        pathRequestsFile = "plugins//GroupSystem//requests.tsqpfd";
     }
 
     public boolean createRequest(String name, String uuid) {
@@ -36,7 +38,7 @@ public class RequestManager {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(pathRequestsFile, false));
                 lines.forEach(x -> {
                     try {
-                        bw.write(x);
+                        bw.write(x + "\n");
                     } catch (IOException e) {
                         logger.printError("Failed to save line in group requests.");
                     }
@@ -130,9 +132,11 @@ public class RequestManager {
             loadRequests();
 
             try {
-                api.addClientToServerGroup(api.addServerGroup(name), api.getClientByUId(gr.getInvokerUUID()).getId());
+                api.addClientToServerGroup(api.addServerGroup(name), api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
+                System.out.println("Added client");
             } catch (Exception e) {
                 // TODO: Store temp link
+                System.out.println(e.getMessage());
             }
 
             return true;
@@ -143,6 +147,16 @@ public class RequestManager {
     }
 
     public boolean loadRequests() {
+
+        File file = new File(pathRequestsFile);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                return false;
+            }
+        }
+
         ArrayList<GroupRequest> newGroupRequests = new ArrayList<>();
         try {
             Files.lines(Paths.get(pathRequestsFile)).forEach(x -> {

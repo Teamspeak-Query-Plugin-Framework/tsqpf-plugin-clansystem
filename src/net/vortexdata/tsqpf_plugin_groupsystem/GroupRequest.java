@@ -17,4 +17,9 @@ public class GroupRequest {
     public String getInvokerUUID() {
         return invokerUUID;
     }
+
+    @Override
+    public String toString() {
+        return groupname + ";" + invokerUUID;
+    }
 }

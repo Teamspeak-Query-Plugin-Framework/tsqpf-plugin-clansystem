@@ -74,6 +74,7 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageAdminGroupDeleteFailedBlacklist", "This group can not be deleted.");
 
         RequestManager rm = new RequestManager(getLogger(), getAPI(), getConfig());
+        rm.loadRequests();
         registerChatCommand(new CGroup(getAPI(), getConfig(), rm, getLogger()), "!group");
 
         getConfig().saveAll();
