@@ -170,21 +170,21 @@ public class CGroup implements ChatCommandInterface {
                     api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageErrorNoPermission"));
                 }
 
+            } else if (command[1].equalsIgnoreCase("requests") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
+
+                api.sendPrivateMessage(textMessageEvent.getInvokerId(), "Group Name | Owner UID");
+                ArrayList<GroupRequest> pending = requestManager.getPendingRequests();
+                if (pending.size() == 0) {
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestListNoRequests"));
+                    return;
+                }
+
+                for (GroupRequest gr : pending) {
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), gr.getGroupname() + " " + gr.getInvokerUUID());
+                }
+
+
             }
-
-        } else if (command[1].equalsIgnoreCase("requests") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
-
-            api.sendPrivateMessage(textMessageEvent.getInvokerId(), "Groupname | Owner");
-            ArrayList<GroupRequest> pending = requestManager.getPendingRequests();
-            if (pending.size() == 0) {
-                api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestListNoRequests"));
-                return;
-            }
-
-            for (GroupRequest gr : pending) {
-                api.sendPrivateMessage(textMessageEvent.getInvokerId(), gr.getGroupname() + " " + api.getClientByUId(gr.getInvokerUUID()).getLoginName());
-            }
-
 
         }
 
