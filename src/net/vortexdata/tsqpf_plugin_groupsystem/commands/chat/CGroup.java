@@ -14,6 +14,7 @@ public class CGroup implements ChatCommandInterface {
 
     private TS3Api api;
     private RequestManager requestManager;
+    private GroupManager groupManager;
     private PluginConfig config;
     private PluginLogger logger;
 
@@ -21,6 +22,7 @@ public class CGroup implements ChatCommandInterface {
         this.api = api;
         this.config = config;
         this.requestManager = requestManager;
+        this.groupManager = new GroupManager(config, api, logger);
         this.logger = logger;
     }
 
@@ -54,7 +56,6 @@ public class CGroup implements ChatCommandInterface {
                             }
 
                             if (!isOneWhitelisted) {
-                                logger.printDebug("" + groups[i]);
                                 api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestFailedAlreadyMemberOfGroup"));
                                 return;
                             }
@@ -118,7 +119,7 @@ public class CGroup implements ChatCommandInterface {
 
                     try {
                         requestManager.getGroupRequestByName(command[2]);
-                        requestManager.validateRequest(command[2]);
+                        requestManager.validateRequest(command[2], textMessageEvent.getInvokerUniqueId());
                     } catch (PendingGroupNotFoundException e) {
                         api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestNotFound"));
                         return;
@@ -127,12 +128,95 @@ public class CGroup implements ChatCommandInterface {
                 } else {
                     api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestSyntax"));
                 }
+            } else if (command[1].equalsIgnoreCase("delete")) {
+
+                if (isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
+
+                    if (command.length > 2) {
+
+                        ArrayList<ServerGroup> groups = new ArrayList<>(api.getServerGroups());
+
+                        for (ServerGroup g : groups) {
+                            if (g.getName().equalsIgnoreCase(command[2])) {
+                                try {
+                                    groupManager.deleteGroup(g.getId());
+                                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupDeleteSuccess"));
+                                } catch (GroupNotFoundException e) {
+                                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupDeleteFailedNotFound"));
+                                } catch (WhitelistedGroupDeletionException e) {
+                                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupDeleteFailedBlacklist"));
+                                }
+                                return;
+                            }
+                        }
+
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupDeleteFailedNotFound"));
+
+                    } else {
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupDeleteSyntax"));
+                    }
+
+                } else if (isInvokerGroupOwner(textMessageEvent.getInvokerUniqueId(), command[2])) {
+
+                    try {
+                        groupManager.deleteGroup(command[2]);
+                    } catch (GroupNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (WhitelistedGroupDeletionException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageErrorNoPermission"));
+                }
+
             }
 
-        } else {
+        } else if (command[1].equalsIgnoreCase("requests") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
+
+            api.sendPrivateMessage(textMessageEvent.getInvokerId(), "Groupname | Owner");
+            ArrayList<GroupRequest> pending = requestManager.getPendingRequests();
+            if (pending.size() == 0) {
+                api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestListNoRequests"));
+                return;
+            }
+
+            for (GroupRequest gr : pending) {
+                api.sendPrivateMessage(textMessageEvent.getInvokerId(), gr.getGroupname() + " " + api.getClientByUId(gr.getInvokerUUID()).getLoginName());
+            }
+
+
+        }
+
+
+
+        else {
             api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageSyntax"));
         }
 
+    }
+
+    public boolean isInvokerGroupOwner(String uid, String groupName) {
+        ArrayList<ServerGroup> invokerGroups = new ArrayList<>(api.getServerGroupsByClient(api.getClientByUId(uid)));
+
+        boolean isOwner = false;
+        for (int i = 0; i < invokerGroups.size(); i++) {
+
+            if (isOwner)
+                break;
+
+            for (int j = 0; j < invokerGroups.size(); j++) {
+
+                if (invokerGroups.get(i).getName().equalsIgnoreCase(groupName)) {
+                    isOwner = true;
+                    break;
+                }
+
+            }
+
+        }
+
+        return isOwner;
     }
 
     public boolean isInvokerAdmin(String uid) {

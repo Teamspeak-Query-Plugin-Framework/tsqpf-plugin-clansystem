@@ -68,10 +68,13 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageAdminGroupRequestAccepted", "Group request has been accepted.");
         getConfig().setDefault("messageAdminGroupRequestNotFound", "Group request could not be found.");
         getConfig().setDefault("messageAdminGroupRequestSyntax", "Syntax: !group validate <GROUPNAME>");
+        getConfig().setDefault("messageAdminGroupRequestListNoRequests", "There are currently no open group requests.");
 
         getConfig().setDefault("messageAdminGroupDeleteValidate", "Are you sure you want to delete this group? Use '!group delete <GROUPNAME> IAMSURE' to confirm.");
         getConfig().setDefault("messageAdminGroupDeleteSuccess", "Group has been deleted.");
         getConfig().setDefault("messageAdminGroupDeleteFailedBlacklist", "This group can not be deleted.");
+        getConfig().setDefault("messageAdminGroupDeleteFailedNotFound", "Group not found.");
+        getConfig().setDefault("messageAdminGroupDeleteSyntax", "Syntax: !group delete <GROUPNAME>");
 
         RequestManager rm = new RequestManager(getLogger(), getAPI(), getConfig());
         rm.loadRequests();

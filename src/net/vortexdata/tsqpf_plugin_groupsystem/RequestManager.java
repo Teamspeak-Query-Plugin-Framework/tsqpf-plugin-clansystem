@@ -125,7 +125,7 @@ public class RequestManager {
 
     }
 
-    public boolean validateRequest(String name) {
+    public boolean validateRequest(String name, String clientUid) {
         try {
             GroupRequest gr = getGroupRequestByName(name);
             deleteRequest(gr);
@@ -133,10 +133,9 @@ public class RequestManager {
 
             try {
                 api.addClientToServerGroup(api.addServerGroup(name), api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
-                System.out.println("Added client");
+                logger.printDebug("Group request for group " + name + " has been validated by " + api.getClientByUId(clientUid).getLoginName() + ".");
             } catch (Exception e) {
-                // TODO: Store temp link
-                System.out.println(e.getMessage());
+                logger.printDebug("Could not add client to requested group.");
             }
 
             return true;
@@ -173,6 +172,10 @@ public class RequestManager {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public ArrayList<GroupRequest> getPendingRequests() {
+        return pendingRequests;
     }
 
 }
