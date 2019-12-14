@@ -74,14 +74,21 @@ public class RequestManager {
         throw new PendingGroupNotFoundException();
     }
 
-    public boolean declineRequest(String groupname) {
+    public boolean declineRequest(String groupname, String reason) {
+        boolean isDeleted = false;
+
         for (int i = 0; i < pendingRequests.size(); i++) {
             if (pendingRequests.get(i).getGroupname().equalsIgnoreCase(groupname)) {
-                return deleteRequest(pendingRequests.get(i));
+                 isDeleted = deleteRequest(pendingRequests.get(i));
+
+                 if (isDeleted)
+                    api.sendPrivateMessage(api.getClientByUId(pendingRequests.get(i).getInvokerUUID()).getId(), config.readValue("messageGroupValidationFailed") + reason);
+
+                 return isDeleted;
             }
         }
 
-        return false;
+        return isDeleted;
     }
 
     public boolean deleteRequest(GroupRequest gr) {
@@ -176,6 +183,24 @@ public class RequestManager {
 
     public ArrayList<GroupRequest> getPendingRequests() {
         return pendingRequests;
+    }
+
+    public boolean cancelRequest(String uid) {
+
+        boolean success = false;
+
+        for (GroupRequest gr : pendingRequests) {
+
+            if (gr.getInvokerUUID().equals(uid)) {
+                deleteRequest(gr);
+                success = true;
+                break;
+            }
+
+        }
+
+        return success;
+
     }
 
 }

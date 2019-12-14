@@ -49,7 +49,7 @@ public class Main extends TeamspeakPlugin {
 
         // Message Group Delete
         getConfig().setDefault("messageGroupDeleteNoPermission", "You don't have the permission to delete this group.");
-        getConfig().setDefault("messageGroupDeleteNoGroup", "You aren't a member of any group.");
+        getConfig().setDefault("messageGroupDeleteNoGroup", "You aren't owner of this group.");
         getConfig().setDefault("messageGroupDeleteWarn", "Are you sure you want to delete this group? Use '!group delete IAMSURE' to confirm.");
         getConfig().setDefault("messageGroupDeleteSuccess", "Your group has been deleted.");
 

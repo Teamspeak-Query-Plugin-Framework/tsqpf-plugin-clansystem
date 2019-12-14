@@ -160,10 +160,11 @@ public class CGroup implements ChatCommandInterface {
 
                     try {
                         groupManager.deleteGroup(command[2]);
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteSuccess"));
                     } catch (GroupNotFoundException e) {
-                        e.printStackTrace();
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteNoGroup"));
                     } catch (WhitelistedGroupDeletionException e) {
-                        e.printStackTrace();
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteNoPermission"));
                     }
 
                 } else {
@@ -172,7 +173,7 @@ public class CGroup implements ChatCommandInterface {
 
             } else if (command[1].equalsIgnoreCase("requests") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
 
-                api.sendPrivateMessage(textMessageEvent.getInvokerId(), "Group Name | Owner UID");
+                api.sendPrivateMessage(textMessageEvent.getInvokerId(), "Group Name || Owner UID");
                 ArrayList<GroupRequest> pending = requestManager.getPendingRequests();
                 if (pending.size() == 0) {
                     api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestListNoRequests"));
@@ -180,9 +181,48 @@ public class CGroup implements ChatCommandInterface {
                 }
 
                 for (GroupRequest gr : pending) {
-                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), gr.getGroupname() + " " + gr.getInvokerUUID());
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), gr.getGroupname() + " || " + gr.getInvokerUUID());
                 }
 
+
+            } else if (command[1].equalsIgnoreCase("decline") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
+
+                if (command.length > 2) {
+
+                    if (command.length > 3) {
+
+                        String reason = "";
+                        for (int i = 3; i < command.length; i++) {
+                            reason += command[i];
+                        }
+
+                        if (requestManager.declineRequest(command[2], reason)) {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclined"));
+                        } else {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclined"));
+                        }
+
+                    } else {
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclinedMissingReason"));
+                    }
+
+                }
+
+            } else if (command[1].equalsIgnoreCase("cancel")) {
+
+                if (command.length > 2) {
+
+                    if (command[2].equalsIgnoreCase("request")) {
+                        if (requestManager.cancelRequest(textMessageEvent.getInvokerUniqueId())) {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestCancelSuccess"));
+                        } else {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestCancelFailed"));
+                        }
+                    } else if (command[2].equalsIgnoreCase("join")) {
+
+                    }
+
+                }
 
             }
 
