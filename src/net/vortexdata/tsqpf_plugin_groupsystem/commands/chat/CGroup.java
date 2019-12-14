@@ -102,7 +102,7 @@ public class CGroup implements ChatCommandInterface {
                             try {
                                 api.sendPrivateMessage(api.getClientByUId(uid).getId(), config.readValue("messageAdminGroupRequestPending"));
                             } catch (Exception e) {
-                                logger.printDebug("Failed to send new request broadcast to client ");
+                                logger.printDebug("Failed to send new request broadcast to admins, maybe none are online? Appending details: " + e.getMessage());
                             }
                         }
 
@@ -120,6 +120,7 @@ public class CGroup implements ChatCommandInterface {
                     try {
                         requestManager.getGroupRequestByName(command[2]);
                         requestManager.validateRequest(command[2], textMessageEvent.getInvokerUniqueId());
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestAccepted"));
                     } catch (PendingGroupNotFoundException e) {
                         api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestNotFound"));
                         return;
@@ -156,19 +157,23 @@ public class CGroup implements ChatCommandInterface {
                         api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupDeleteSyntax"));
                     }
 
-                } else if (isInvokerGroupOwner(textMessageEvent.getInvokerUniqueId(), command[2])) {
+                } else if (command.length > 2) {
 
-                    try {
-                        groupManager.deleteGroup(command[2]);
-                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteSuccess"));
-                    } catch (GroupNotFoundException e) {
-                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteNoGroup"));
-                    } catch (WhitelistedGroupDeletionException e) {
-                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteNoPermission"));
+                    if (isInvokerGroupOwner(textMessageEvent.getInvokerUniqueId(), command[2])) {
+
+                        try {
+                            groupManager.deleteGroup(command[2]);
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteSuccess"));
+                        } catch (GroupNotFoundException e) {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteNoGroup"));
+                        } catch (WhitelistedGroupDeletionException e) {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteNoPermission"));
+                        }
+
+                    } else {
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageErrorNoPermission"));
                     }
 
-                } else {
-                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageErrorNoPermission"));
                 }
 
             } else if (command[1].equalsIgnoreCase("requests") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
@@ -197,15 +202,17 @@ public class CGroup implements ChatCommandInterface {
                         }
 
                         if (requestManager.declineRequest(command[2], reason)) {
-                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclined"));
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclined") + reason);
                         } else {
-                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclined"));
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclinedFailed"));
                         }
 
                     } else {
                         api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestDeclinedMissingReason"));
                     }
 
+                } else {
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageAdminGroupRequestSyntax"));
                 }
 
             } else if (command[1].equalsIgnoreCase("cancel")) {

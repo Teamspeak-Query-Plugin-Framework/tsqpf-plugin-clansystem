@@ -75,14 +75,19 @@ public class RequestManager {
     }
 
     public boolean declineRequest(String groupname, String reason) {
+        loadRequests();
         boolean isDeleted = false;
 
         for (int i = 0; i < pendingRequests.size(); i++) {
             if (pendingRequests.get(i).getGroupname().equalsIgnoreCase(groupname)) {
-                 isDeleted = deleteRequest(pendingRequests.get(i));
 
-                 if (isDeleted)
-                    api.sendPrivateMessage(api.getClientByUId(pendingRequests.get(i).getInvokerUUID()).getId(), config.readValue("messageGroupValidationFailed") + reason);
+                 GroupRequest gr = pendingRequests.get(i);
+                 isDeleted = deleteRequest(gr);
+                 if (isDeleted) {
+                     String uid = gr.getInvokerUUID();
+                     int id = api.getClientByUId(uid).getId();
+                     api.sendPrivateMessage(id, config.readValue("messageGroupValidationFailed") + reason);
+                 }
 
                  return isDeleted;
             }
@@ -139,7 +144,10 @@ public class RequestManager {
             loadRequests();
 
             try {
-                api.addClientToServerGroup(api.addServerGroup(name), api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
+                int newGroupId = api.addServerGroup(name);
+                api.addServerGroupPermission(newGroupId, "i_group_show_name_in_tree", 1, false, false);
+                api.addClientToServerGroup(newGroupId, api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
+                api.sendPrivateMessage(api.getClientByUId(gr.getInvokerUUID()).getId(), config.readValue("messageGroupRequestAccepted"));
                 logger.printDebug("Group request for group " + name + " has been validated by " + api.getClientByUId(clientUid).getLoginName() + ".");
             } catch (Exception e) {
                 logger.printDebug("Could not add client to requested group.");

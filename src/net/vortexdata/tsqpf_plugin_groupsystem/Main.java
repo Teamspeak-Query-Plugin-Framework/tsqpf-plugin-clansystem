@@ -11,6 +11,7 @@ public class Main extends TeamspeakPlugin {
 
         getConfig().setDefault("adminGroupIds", "1");
         getConfig().setDefault("whitelistGroupIds", "1");
+        getConfig().setDefault("groupTagPosition", "before");
         // Message Group Request
         getConfig().setDefault("messageGroupRequestSyntax", "Create your own group by using '!group request <GROUPNAME>'.");
         getConfig().setDefault("messageGroupRequestSuccess", "Your group has been registered and will be reviewed by an administrator as soon as possible.");
@@ -21,6 +22,7 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageGroupRequestCancelSuccess", "All of your pending group requests have been cancelled.");
         getConfig().setDefault("messageGroupRequestCancelFailed", "You don't have any pending group requests.");
         getConfig().setDefault("messageGroupRequestFailedNoPermissions", "Sorry, but you don't have the required permissions to perform this action.");
+        getConfig().setDefault("messageGroupRequestAccepted", "Your requested group has been reviewed and verified.");
 
         // Message Group Validation
         getConfig().setDefault("messageGroupValidationSuccess", "The group you requested has been validated.");
@@ -62,12 +64,13 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageSyntax", "Syntax: !group <join | request | delete>");
 
         // Message Admin
-        getConfig().setDefault("messageAdminGroupRequestPending", "There are new group requests awaiting validation. Use '!group list requests' to list all requests. Use '!group validate <GROUP>' to validate it.");
+        getConfig().setDefault("messageAdminGroupRequestPending", "There are new group requests awaiting validation. Use '!group requests' to list all requests. Use '!group validate <GROUP>' to validate it.");
         getConfig().setDefault("messageAdminGroupRequestDeclined", "Group request has been declined due to following reason: ");
+        getConfig().setDefault("messageAdminGroupRequestDeclinedFailed", "Could not decline group request.");
         getConfig().setDefault("messageAdminGroupRequestDeclinedMissingReason", "Please specify a reason.");
         getConfig().setDefault("messageAdminGroupRequestAccepted", "Group request has been accepted.");
         getConfig().setDefault("messageAdminGroupRequestNotFound", "Group request could not be found.");
-        getConfig().setDefault("messageAdminGroupRequestSyntax", "Syntax: !group validate <GROUPNAME>");
+        getConfig().setDefault("messageAdminGroupRequestSyntax", "Syntax: !group <validate | decline> <GROUPNAME>");
         getConfig().setDefault("messageAdminGroupRequestListNoRequests", "There are currently no open group requests.");
 
         getConfig().setDefault("messageAdminGroupDeleteValidate", "Are you sure you want to delete this group? Use '!group delete <GROUPNAME> IAMSURE' to confirm.");
