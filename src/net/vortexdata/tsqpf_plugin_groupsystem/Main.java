@@ -35,6 +35,7 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageGroupJoinRequestFailedClosedGroup", "Sorry, but this group does not accept any join requests at this time.");
         getConfig().setDefault("messageGroupJoinRequestFailedUnknownGroup", "This group does not exist. Please check for any typos.");
         getConfig().setDefault("messageGroupJoinRequestCreated", "Join request has been created.");
+        getConfig().setDefault("messageGroupJoinSyntax", "Syntax: !group join <GROUPNAME>");
 
         getConfig().setDefault("messageGroupManageJoinRequestAccepted", "Join request has been accepted.");
         getConfig().setDefault("messageGroupManageJoinRequestDecline", "Join request has been declined.");

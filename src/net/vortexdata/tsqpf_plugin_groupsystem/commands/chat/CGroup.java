@@ -231,6 +231,18 @@ public class CGroup implements ChatCommandInterface {
 
                 }
 
+            } else if (command[1].equalsIgnoreCase("join")) {
+
+                if (command.length > 2) {
+
+                    groupManager
+
+                } else {
+
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupJoinSyntax"));
+
+                }
+
             }
 
         }
