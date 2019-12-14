@@ -198,7 +198,7 @@ public class CGroup implements ChatCommandInterface {
 
                         String reason = "";
                         for (int i = 3; i < command.length; i++) {
-                            reason += command[i];
+                            reason += command[i] + " ";
                         }
 
                         if (requestManager.declineRequest(command[2], reason)) {
