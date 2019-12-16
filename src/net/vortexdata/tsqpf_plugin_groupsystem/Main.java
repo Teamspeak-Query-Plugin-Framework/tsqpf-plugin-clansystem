@@ -45,6 +45,12 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageGroupManageJoinRequestAlreadyEnabled", "Join requests are already enabled.");
         getConfig().setDefault("messageGroupManageJoinRequestAlreadyDisabled", "Join requests are already disabled.");
 
+        // Message group invite
+        getConfig().setDefault("messageGroupInviteSyntax", "You can generate keys for your group by using the command '!group invite <AMOUNT_OF_KEYS_YOU_WANT_TO_GENERATE>'. You can then send the generated keys to your friends. They in turn can redeem their code by expanding the 'Permissions' dropdown menu in their Teamspeak application and then select 'Use Privilege Key' just at the bottom. You can list existing keys by using the command '!group invites'.");
+        getConfig().setDefault("messageGroupInviteFailedMaxInviteExceeded", "You've exceeded the maximum number of open invite keys. Use '!group invites' to list them.");
+        getConfig().setDefault("messageGroupInviteFailedMaxInviteGenerationAtATimeExceeded", "You can not generate more than 5 invites at once.");
+        getConfig().setDefault("messageGroupInviteFailedInvalidAmount", "The number of codes to generate is not valid. Please check for typos.");
+
         // Message Group Ownership Transfer
         getConfig().setDefault("messageGroupManageOwnershipTransferSuccess", "Ownership has been transferred.");
         getConfig().setDefault("messageGroupManageOwnershipTransferFailedClientNotMember", "Ownership can not be transferred to clients who are not member of this group.");

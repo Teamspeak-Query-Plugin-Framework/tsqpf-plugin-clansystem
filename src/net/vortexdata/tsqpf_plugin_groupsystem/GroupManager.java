@@ -1,6 +1,7 @@
 package net.vortexdata.tsqpf_plugin_groupsystem;
 
 import com.github.theholywaffle.teamspeak3.*;
+import com.github.theholywaffle.teamspeak3.api.*;
 import com.github.theholywaffle.teamspeak3.api.wrapper.*;
 import net.vortexdata.tsqpf.plugins.*;
 import net.vortexdata.tsqpf_plugin_groupsystem.exceptions.*;
@@ -159,6 +160,24 @@ public class GroupManager {
 
 
         return true;
+    }
+
+    public String createInvite(int groupId) {
+        return api.addPrivilegeKey(PrivilegeKeyType.SERVER_GROUP, groupId, 0, "Group invite key");
+    }
+
+    public ArrayList<PrivilegeKey> getInviteCodes(int groupId) {
+
+        ArrayList<PrivilegeKey> groupKeys = new ArrayList<>();
+        ArrayList<PrivilegeKey> keys = new ArrayList<>(api.getPrivilegeKeys());
+
+        for (PrivilegeKey key : keys) {
+            if (key.getGroupId() == groupId)
+                groupKeys.add(key);
+        }
+
+        return groupKeys;
+
     }
 
 }

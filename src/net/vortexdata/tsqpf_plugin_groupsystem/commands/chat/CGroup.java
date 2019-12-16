@@ -231,15 +231,79 @@ public class CGroup implements ChatCommandInterface {
 
                 }
 
-            } else if (command[1].equalsIgnoreCase("join")) {
+            } else if (command[1].equalsIgnoreCase("invite")) {
 
                 if (command.length > 2) {
 
-                    groupManager
+                    int numberOfKeysToGenerate = 0;
+                    try {
+                        numberOfKeysToGenerate = Integer.parseInt(command[2]);
+                        if (numberOfKeysToGenerate > 5) {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupInviteFailedMaxInviteGenerationAtATimeExceeded"));
+                            return;
+                        } else if (numberOfKeysToGenerate < 1) {
+                            api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupInviteFailedInvalidAmount"));
+                        } else {
+
+                            ArrayList<ServerGroup> groups = new ArrayList<>(api.getServerGroupsByClient(api.getClientByUId(textMessageEvent.getInvokerUniqueId())));
+
+                            int groupId = -1;
+
+                            String[] adminGroupsRaw = config.readValue("adminGroupIds").split(",");
+
+                            for (int i = 0; i < groups.size(); i++) {
+
+                                for (int j = 0; j < adminGroupsRaw.length; j++) {
+
+                                    if (Integer.parseInt(adminGroupsRaw[j]) != groups.get(i).getId())
+                                        groupId = groups.get(i).getId();
+
+                                }
+
+                            }
+
+                            if (groupId <= 0)
+                                return;
+
+                            for (int i = 0; i < numberOfKeysToGenerate; i++) {
+                                api.sendPrivateMessage(textMessageEvent.getInvokerId(), groupManager.createInvite(groupId));
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupInviteFailedInvalidAmount"));
+                    }
+
 
                 } else {
 
-                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupJoinSyntax"));
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupInviteSyntax"));
+
+                }
+
+            }
+
+            else if (command[1].equalsIgnoreCase("invites")) {
+
+                if (!isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
+
+                    int[] clientGroups = api.getClientByUId(textMessageEvent.getInvokerUniqueId()).getServerGroups();
+
+                    boolean wasATokenFound = false;
+                    for (int i : clientGroups) {
+                        ArrayList<PrivilegeKey> codes = new ArrayList<>(groupManager.getInviteCodes(i));
+                        if (codes != null && codes.size() > 0) {
+
+                            wasATokenFound = true;
+                            for (PrivilegeKey key : codes)
+                                api.sendPrivateMessage(textMessageEvent.getInvokerId(), key.getToken());
+
+                            break;
+                        }
+                    }
+
+                    if (!wasATokenFound) {
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), "There are no open invite keys.");
+                    }
 
                 }
 
