@@ -322,24 +322,19 @@ public class CGroup implements ChatCommandInterface {
     public boolean isInvokerGroupOwner(String uid, String groupName) {
         ArrayList<ServerGroup> invokerGroups = new ArrayList<>(api.getServerGroupsByClient(api.getClientByUId(uid)));
 
-        boolean isOwner = false;
+        int groupOwnerId = Integer.parseInt(config.readValue("groupOwnerGroupId"));
+
         for (int i = 0; i < invokerGroups.size(); i++) {
 
-            if (isOwner)
-                break;
+            if (invokerGroups.get(i).getId() == groupOwnerId) {
 
-            for (int j = 0; j < invokerGroups.size(); j++) {
-
-                if (invokerGroups.get(i).getName().equalsIgnoreCase(groupName)) {
-                    isOwner = true;
-                    break;
-                }
+                return true;
 
             }
 
         }
 
-        return isOwner;
+        return false;
     }
 
     public boolean isInvokerAdmin(String uid) {

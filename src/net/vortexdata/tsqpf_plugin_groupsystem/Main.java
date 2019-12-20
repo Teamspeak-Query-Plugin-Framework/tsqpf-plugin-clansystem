@@ -11,6 +11,7 @@ public class Main extends TeamspeakPlugin {
 
         getConfig().setDefault("adminGroupIds", "1");
         getConfig().setDefault("whitelistGroupIds", "1");
+        getConfig().setDefault("groupOwnerGroupId", "1");
         getConfig().setDefault("groupTagPosition", "before");
         // Message Group Request
         getConfig().setDefault("messageGroupRequestSyntax", "Create your own group by using '!group request <GROUPNAME>'.");
