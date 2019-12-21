@@ -62,6 +62,7 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageGroupDeleteNoGroup", "You aren't owner of this group.");
         getConfig().setDefault("messageGroupDeleteWarn", "Are you sure you want to delete this group? Use '!group delete IAMSURE' to confirm.");
         getConfig().setDefault("messageGroupDeleteSuccess", "Your group has been deleted.");
+        getConfig().setDefault("messageGroupDeleteSyntax", "Syntax: !group delete <GROUP>");
 
         // Message Group Kick
         getConfig().setDefault("messageGroupMemberKickSuccess", "Member has been removed.");

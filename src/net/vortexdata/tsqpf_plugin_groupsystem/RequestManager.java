@@ -147,6 +147,7 @@ public class RequestManager {
                 int newGroupId = api.addServerGroup(name);
                 api.addServerGroupPermission(newGroupId, "i_group_show_name_in_tree", 1, false, false);
                 api.addClientToServerGroup(newGroupId, api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
+                api.addClientToServerGroup(Integer.parseInt(config.readValue("groupOwnerGroupId")), api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
                 api.sendPrivateMessage(api.getClientByUId(gr.getInvokerUUID()).getId(), config.readValue("messageGroupRequestAccepted"));
                 logger.printDebug("Group request for group " + name + " has been validated by " + api.getClientByUId(clientUid).getLoginName() + ".");
             } catch (Exception e) {

@@ -174,6 +174,10 @@ public class CGroup implements ChatCommandInterface {
                         api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageErrorNoPermission"));
                     }
 
+                } else {
+
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteSyntax"));
+
                 }
 
             } else if (command[1].equalsIgnoreCase("requests") && isInvokerAdmin(textMessageEvent.getInvokerUniqueId())) {
