@@ -146,6 +146,9 @@ public class RequestManager {
             try {
                 int newGroupId = api.addServerGroup(name);
                 api.addServerGroupPermission(newGroupId, "i_group_show_name_in_tree", 1, false, false);
+                api.addServerGroupPermission(newGroupId, "i_group_needed_member_remove_power", Integer.parseInt(config.readValue("i_group_needed_member_remove_power")), false, false);
+                api.addServerGroupPermission(newGroupId, "i_group_needed_member_add_power", Integer.parseInt(config.readValue("i_group_needed_member_add_power")), false, false);
+                api.addServerGroupPermission(newGroupId, "i_group_needed_modify_power", Integer.parseInt(config.readValue("i_group_needed_modify_power")), false, false);
                 api.addClientToServerGroup(newGroupId, api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
                 api.addClientToServerGroup(Integer.parseInt(config.readValue("groupOwnerGroupId")), api.getClientByUId(gr.getInvokerUUID()).getDatabaseId());
                 api.sendPrivateMessage(api.getClientByUId(gr.getInvokerUUID()).getId(), config.readValue("messageGroupRequestAccepted"));

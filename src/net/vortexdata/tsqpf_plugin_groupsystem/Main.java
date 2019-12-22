@@ -13,6 +13,9 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("whitelistGroupIds", "1");
         getConfig().setDefault("groupOwnerGroupId", "1");
         getConfig().setDefault("groupTagPosition", "before");
+        getConfig().setDefault("i_group_needed_modify_power", "10");
+        getConfig().setDefault("i_group_needed_member_add_power", "10");
+        getConfig().setDefault("i_group_needed_member_remove_power", "10");
         // Message Group Request
         getConfig().setDefault("messageGroupRequestSyntax", "Create your own group by using '!group request <GROUPNAME>'.");
         getConfig().setDefault("messageGroupRequestSuccess", "Your group has been registered and will be reviewed by an administrator as soon as possible.");
@@ -22,6 +25,7 @@ public class Main extends TeamspeakPlugin {
         getConfig().setDefault("messageGroupRequestFailedNameInvalid", "Sorry, but this group name is not valid. Make sure it only contains alpha-numeric characters and is between 4 - 20 characters in length.");
         getConfig().setDefault("messageGroupRequestCancelSuccess", "All of your pending group requests have been cancelled.");
         getConfig().setDefault("messageGroupRequestCancelFailed", "You don't have any pending group requests.");
+        getConfig().setDefault("messageGroupRequestCancelSyntax", "Syntax: !group cancel request");
         getConfig().setDefault("messageGroupRequestFailedNoPermissions", "Sorry, but you don't have the required permissions to perform this action.");
         getConfig().setDefault("messageGroupRequestAccepted", "Your requested group has been reviewed and verified.");
 

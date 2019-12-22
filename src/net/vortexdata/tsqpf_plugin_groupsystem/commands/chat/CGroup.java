@@ -162,6 +162,7 @@ public class CGroup implements ChatCommandInterface {
                     if (isInvokerGroupOwner(textMessageEvent.getInvokerUniqueId(), command[2])) {
 
                         try {
+                            api.removeClientFromServerGroup(Integer.parseInt(config.readValue("groupOwnerGroupId")), api.getClientByUId(textMessageEvent.getInvokerUniqueId()).getDatabaseId());
                             groupManager.deleteGroup(command[2]);
                             api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupDeleteSuccess"));
                         } catch (GroupNotFoundException e) {
@@ -229,10 +230,12 @@ public class CGroup implements ChatCommandInterface {
                         } else {
                             api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestCancelFailed"));
                         }
-                    } else if (command[2].equalsIgnoreCase("join")) {
-
+                    } else {
+                        api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestCancelSyntax"));
                     }
 
+                } else {
+                    api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageGroupRequestCancelSyntax"));
                 }
 
             } else if (command[1].equalsIgnoreCase("invite")) {
@@ -314,8 +317,6 @@ public class CGroup implements ChatCommandInterface {
             }
 
         }
-
-
 
         else {
             api.sendPrivateMessage(textMessageEvent.getInvokerId(), config.readValue("messageSyntax"));
