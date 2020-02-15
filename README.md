@@ -1,5 +1,5 @@
 # ClanSystem
-A small template for any TSQPF plugins.
+A simple group system.
 
 ## 🏷️ Features
 ✅ Let your users create their own group<br/>
